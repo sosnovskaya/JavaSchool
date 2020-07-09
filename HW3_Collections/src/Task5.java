@@ -2,69 +2,56 @@ import java.util.*;
 
 public class Task5 {
     public static void main(String[] args) {
-        List<Integer> list = new BackWardList<>();
-        //list.addAll(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
-        list.add(1);
-        Iterator iterator = list.iterator();
-        while (iterator.hasNext()){
-            System.out.println(iterator.next());
-        }
-
+        List<Integer> list = new ArrayList<>();
+        list.addAll(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
+        MyStructure<Integer> myStructure = new MyStructure<>(list);
+        myStructure.printBackward();
     }
 
-    public static class BackwardIterator<T> implements Iterator<T>{
+    public static class MyStructure<T>{
 
-        private List<T> list;
-        private int current;
-        private boolean isNextCalled;
+        private final List<T> elements = new ArrayList<>();
 
-        public BackwardIterator(List<T> list){
-            this.list = list;
-            current = list.size();
-            isNextCalled = false;
+        public MyStructure(Collection<? extends T> els) {
+            elements.addAll(els);
         }
 
-        @Override
-        public boolean hasNext() {
-            return (0 < current && current <= list.size());
+        public void printBackward(){
+            Iterator iterator = this.new BackwardIterator<T>();
+            while (iterator.hasNext())
+                System.out.println(iterator.next() + " ");
         }
 
-        @Override
-        public T next() {
-            isNextCalled = true;
-            current--;
-            return list.get(current);
-        }
+        public class BackwardIterator<T> implements Iterator<T>{
 
-        @Override
-        public void remove() {
-            if(current == list.size() || current == -1 || !isNextCalled)
-                throw new IllegalStateException();
-            list.remove(current);
-            isNextCalled = false;
-        }
-    }
+            private int current;
+            private boolean isNextCalled;
 
-    static class BackWardList<T> extends AbstractList<T> implements Iterable<T>{
-        List<T> list;
+            public BackwardIterator(){
+                current = elements.size();
+                isNextCalled = false;
+            }
 
-        public BackWardList() {
-            this.list = new ArrayList<>();
-        }
+            @Override
+            public boolean hasNext() {
+                return (0 < current && current <= elements.size());
+            }
 
-        @Override
-        public T get(int i) {
-            return list.get(i);
-        }
+            @Override
+            public T next() {
+                isNextCalled = true;
+                current--;
+                return (T) elements.get(current);
+            }
 
-        @Override
-        public Iterator<T> iterator() {
-            return new BackwardIterator<>(list);
-        }
-
-        @Override
-        public int size() {
-            return list.size();
+            @Override
+            public void remove() {
+                if(current == elements.size() || current == -1 || !isNextCalled)
+                    throw new IllegalStateException();
+                elements.remove(current);
+                isNextCalled = false;
+            }
         }
     }
+
 }
